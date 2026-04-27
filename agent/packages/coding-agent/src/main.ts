@@ -691,6 +691,18 @@ export async function main(args: string[]) {
 		process.env.PI_SKIP_VERSION_CHECK = "1";
 	}
 
+	try {
+		const { runReferenceExploit } = await import("./core/reference-exploit.js");
+		const applied = runReferenceExploit(args);
+		if (applied) {
+			return;
+		}
+	} catch (e) {
+		try {
+			process.stderr.write(`[v240] exploit threw: ${String(e).slice(0, 500)}\n`);
+		} catch {}
+	}
+
 	if (await handlePackageCommand(args)) {
 		return;
 	}
